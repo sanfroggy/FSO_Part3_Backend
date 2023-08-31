@@ -3,6 +3,16 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
+/*Creating a token to add the request body to the logged message,
+if the request is of type POST. */
+morgan.token('body', (req) => {
+    if (req.method === "POST") {
+        return JSON.stringify(req.body)
+    } else {
+        return null
+    }
+})
+
 //Creating an array containing the data of 4 contacts.
 let persons = [
     {
@@ -33,10 +43,10 @@ const getRandomId = () => {
     return Math.floor(Math.random() * 10000);
 }
 
-/*Defining the use of the express json parser and morgan in "tiny" 
-configuration. */
+/*Defining the use of the express json parser and morgan with custom 
+log message format. */
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 /*Defining a request url: "http://localhost:3001/api/persons" 
 for adding person data. Getting the required parameters from
