@@ -41,14 +41,31 @@ the request body and id from the getRandomId function.
 Adding the created person object to the array and displaying it. */
 app.post('/api/persons', (req, res) => {
     const body = req.body
-    const person = {
-        id: getRandomId(),
-        name: body.name,
-        number: body.number
-    }
 
-    persons = persons.concat(person)
-    res.json(person)
+    /*Checking if the request body has data for the name and number
+    and returning a status code of 400 "Bad request" if data is missing. */
+    if (!body.name || !body.number) {
+        return res.status(400).json({
+            error: 'Name or number is missing.'
+        })
+    } else {
+
+        /*Checking if the name given in the request body already exists in the 
+        persons array and returning a status code of 400 "Bad request" if it does. */
+        if (persons.some(person => person.name === body.name)) {
+            return res.status(400).json({
+                error: 'Name already exists in the phonebook.'
+            })
+        } else {
+            const person = {
+                id: getRandomId(),
+                name: body.name,
+                number: body.number
+            }
+            persons = persons.concat(person)
+            res.json(person)
+        }
+    }
 })
 
 /*Creating and displaying a json response for url 
