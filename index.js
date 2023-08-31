@@ -32,6 +32,21 @@ app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
+/*Creating and displaying a json response for showing the
+data of a single. Also returning a 404 "Not found" status code
+if a person with the given id does not exists. */
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.find(person => person.id === id)
+
+    if (person) {
+        res.json(person)
+    } else {
+        res.status(404).end()
+    }
+})
+
+
 /*Creating and displaying a response for url 
 "http://localhost:3001/info" containing the number of entries
 in the person array and the current date and time. */
