@@ -26,6 +26,31 @@ let persons = [
     }
 ]
 
+/*Creating a function to return a random number between
+0 and 10000 */
+const getRandomId = () => {
+    return Math.floor(Math.random() * 10000);
+}
+
+//Defining the use of the express json parser.
+app.use(express.json())
+
+/*Defining a request url: "http://localhost:3001/api/persons" 
+for adding person data. Getting the required parameters from
+the request body and id from the getRandomId function.
+Adding the created person object to the array and displaying it. */
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    const person = {
+        id: getRandomId(),
+        name: body.name,
+        number: body.number
+    }
+
+    persons = persons.concat(person)
+    res.json(person)
+})
+
 /*Creating and displaying a json response for url 
 "http://localhost:3001/api/persons" containing the data of persons array. */
 app.get('/api/persons', (req, res) => {
