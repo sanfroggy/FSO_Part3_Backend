@@ -46,7 +46,6 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
-
 /*Creating and displaying a response for url 
 "http://localhost:3001/info" containing the number of entries
 in the person array and the current date and time. */
@@ -54,6 +53,15 @@ app.get('/info', (req, res) => {
     let timestring = res.get('Date')
     res.send(`Phonebook contains info for ${persons.length} people. </br></br>
 ${Date()}`)
+})
+
+/*Defining a request url for deleting the data of a person.
+Responding with a status code 204 "No content" as no data is required
+to be sent with the response. */
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    persons = persons.filter(person => person.id !== id)
+    res.status(204).end()
 })
 
 const PORT = 3001
