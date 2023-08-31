@@ -1,5 +1,6 @@
-//Defining the constants for the use of express library
+//Defining the constants for the use of Express and Morgan
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 //Creating an array containing the data of 4 contacts.
@@ -32,8 +33,10 @@ const getRandomId = () => {
     return Math.floor(Math.random() * 10000);
 }
 
-//Defining the use of the express json parser.
+/*Defining the use of the express json parser and morgan in "tiny" 
+configuration. */
 app.use(express.json())
+app.use(morgan('tiny'))
 
 /*Defining a request url: "http://localhost:3001/api/persons" 
 for adding person data. Getting the required parameters from
