@@ -1,4 +1,5 @@
-//Defining the constants for the use of Express and Morgan
+//Defining the constants for the use of Express, cors and Morgan
+const cors = require('cors')
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
@@ -43,8 +44,9 @@ const getRandomId = () => {
     return Math.floor(Math.random() * 10000);
 }
 
-/*Defining the use of the express json parser and morgan with custom 
-log message format. */
+/*Defining the use of the express json parser, cors middleware and morgan 
+with custom log message format. */
+app.use(cors())
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
