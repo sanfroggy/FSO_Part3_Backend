@@ -83,8 +83,7 @@ app.post('/api/persons', (req, res) => {
     }
 })
 
-/*Creating and displaying a json response for url 
-"http://localhost:3001/api/persons" containing the data of persons array. */
+/*Creating and displaying a json response containing the data of persons array. */
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
@@ -103,8 +102,7 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
-/*Creating and displaying a response for url 
-"http://localhost:3001/info" containing the number of entries
+/*Creating and displaying a response containing the number of entries
 in the person array and the current date and time. */
 app.get('/info', (req, res) => {
     let timestring = res.get('Date')
@@ -121,5 +119,9 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
-const PORT = 3001
-app.listen(PORT)
+/*Define the port for the backend. Either the one defined in enviromental
+variable PORT or port 3001. */
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
