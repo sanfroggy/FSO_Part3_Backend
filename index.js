@@ -1,8 +1,10 @@
-//Defining the constants for the use of Express, cors and Morgan
+//Defining dotenv and the constants for the use of Express, cors, Morgan and Contact model
+require('dotenv').config()
 const cors = require('cors')
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const Contact = require('./models/contact')
 
 /*Creating a token to add the request body to the logged message,
 if the request is of type POST. */
@@ -86,7 +88,9 @@ app.post('/api/persons', (req, res) => {
 
 /*Creating and displaying a json response containing the data of persons array. */
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Contact.find({}).then(contacts => {
+        res.json(contacts)
+    })
 })
 
 /*Creating and displaying a json response for showing the
@@ -121,8 +125,8 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 /*Define the port for the backend. Either the one defined in enviromental
-variable PORT or port 3001. */
-const PORT = process.env.PORT || 3001
+variable PORT. */
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
