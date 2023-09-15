@@ -44,10 +44,11 @@ const getRandomId = () => {
     return Math.floor(Math.random() * 10000);
 }
 
-/*Defining the use of the express json parser, cors middleware and morgan 
-with custom log message format. */
+/*Defining the use of the express json parser, cors middleware, express static middleware
+and morgan with custom log message format. */
 app.use(cors())
 app.use(express.json())
+app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 /*Defining a request url: "http://localhost:3001/api/persons" 
