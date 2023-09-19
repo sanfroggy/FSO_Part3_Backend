@@ -6,8 +6,8 @@ mongoose.set('strictQuery', false)
 
 
 /*Get the password and the username strings from the MONGODB_URI enviromental variable and
-use EncodeURIComponent to ensure special characters will be escaped correctly. 
-That those string will be then used when forming a URL to connect to. */
+use EncodeURIComponent to ensure that special characters will be escaped correctly. 
+Those string will be then used when forming a URL to connect to. */
 let splitfirst = process.env.MONGODB_URI.split(":")
 let usrindex = splitfirst.indexOf(splitfirst.find(string => string.includes("cluster")))
 let usrstring = ""
