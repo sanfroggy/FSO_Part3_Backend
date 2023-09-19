@@ -23,6 +23,17 @@ const contactSchema = new mongoose.Schema({
     number: String,
 })
 
+/*Define the properties of the objects that are returned by the toObject method. 
+Exclude the _id value as well as the MongoDB version field __v. 
+Also transform the value of _id from object to a string */
+contactSchema.set("toObject", {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+
 const Contact = mongoose.model('Contact', contactSchema)
 
 //Check the command line arguments include a name and a number and add a new Contact to database.
@@ -51,7 +62,7 @@ if (process.argv.length === 3) {
     //Get and print all contacts from MongoDB.
     Contact.find({}).then(result => {
         result.forEach(contact => {
-            console.log(contact)
+            console.log(contact.name, contact.number)
         })
         mongoose.connection.close()
     })
