@@ -5,11 +5,43 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 
-/*Get the password string from the MONGODB_URI enviromental variable and
+/*Get the password and the username strings from the MONGODB_URI enviromental variable and
 use EncodeURIComponent to ensure special characters will be escaped correctly. 
-That password will be then used when forming a URL to connect to. */
+That those string will be then used when forming a URL to connect to. */
 let splitfirst = process.env.MONGODB_URI.split(":")
-let splitsecond = splitfirst[2].split("@")
+let usrindex = splitfirst.indexOf(splitfirst.find(string => string.includes("cluster")))
+let usrstring = ""
+
+for (var i = 0; i < usrindex; i++) {
+    if (splitfirst.length > 3) {
+        if (i === 1) {
+            usrstring += "://" + encodeURIComponent(splitfirst[i].substring(2) + ":")
+        } else {
+            if (i !== usrindex - 1 && i > 0) {
+                usrstring += encodeURIComponent(splitfirst[i] + ":")
+            } else {
+                if (i === usrindex - 1) {
+                    usrstring += encodeURIComponent(splitfirst[i]) + ":"
+                } else {
+                    usrstring += splitfirst[i]
+                }
+            }
+        }
+    } else {
+        if (i === 1) {
+            usrstring += "://" + encodeURIComponent(splitfirst[i].substring(2)) + ":"
+        } else {
+            if (i > 0) {
+                usrstring += encodeURIComponent(splitfirst[i]) + ":"
+            } else {
+                usrstring += splitfirst[i]
+            }
+        }
+    }       
+}
+
+let splitsecond = splitfirst[usrindex].split("@")
+
 let pwdindex = splitsecond.indexOf(splitsecond.find(string => string.includes("cluster")))
 let encodedstring = ""
 for (var i = 0; i < pwdindex; i++) {
@@ -24,7 +56,7 @@ for (var i = 0; i < pwdindex; i++) {
     }  
 }
 
-const url = `${splitfirst[0]}:${splitfirst[1]}:${encodedstring}@${splitsecond[pwdindex]}`
+const url = `${usrstring}${encodedstring}@${splitsecond[pwdindex]}`
 
 //Connect to MongoDB and print a message for successful and failed attempts.
 console.log('connecting to', url)
