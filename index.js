@@ -29,10 +29,10 @@ app.use(express.json())
 app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-/*Defining a request url: "http://localhost:3001/api/persons" 
+/*Defining a post request url: "/api/persons" 
 for adding person data. Getting the required parameters from
-the request body and id from the getRandomId function.
-Adding the created person object to the array and displaying it. */
+the request body. Adding the created person to the MongoDB
+database and displaying it's data in the response. */
 app.post('/api/persons', (req, res) => {
     const body = req.body
 
@@ -43,26 +43,18 @@ app.post('/api/persons', (req, res) => {
             error: 'Name or number is missing.'
         })
     } else {
-
-        /*Checking if the name given in the request body already exists in the 
-        persons array and returning a status code of 400 "Bad request" if it does. */
-        if (persons.some(person => person.name === body.name)) {
-            return res.status(400).json({
-                error: 'Name already exists in the phonebook.'
-            })
-        } else {
-            const person = {
-                id: getRandomId(),
-                name: body.name,
-                number: body.number
-            }
-            persons = persons.concat(person)
-            res.json(person)
-        }
+        const person = new Contact({
+            name: body.name,
+            number: body.number
+        })
+        person.save().then(savedPerson => {
+            res.json(savedPerson)
+        })         
     }
 })
 
-/*Creating and displaying a json response containing the data of persons array. */
+/*Creating and displaying a json response for url "api/persons" 
+containing the data stored in MongoDB. */
 app.get('/api/persons', (req, res) => {
     Contact.find({}).then(contacts => {
         res.json(contacts)
