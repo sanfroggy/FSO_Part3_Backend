@@ -16,12 +16,6 @@ morgan.token('body', (req) => {
     }
 })
 
-/*Creating a function to return a random number between
-0 and 10000 */
-const getRandomId = () => {
-    return Math.floor(Math.random() * 10000);
-}
-
 /*Defining the use of the express json parser, cors middleware, express static middleware
 and morgan with custom log message format. */
 app.use(cors())
