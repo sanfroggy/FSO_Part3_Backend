@@ -77,13 +77,15 @@ app.get('/info', (req, res) => {
 ${Date()}`)
 })
 
-/*Defining a request url for deleting the data of a person.
-Responding with a status code 204 "No content" as no data is required
-to be sent with the response. */
+/*Defining a delete request url: "api/persons/id" for deleting the data of a 
+person from the MongoDB database. Responding with a status code 204 "No content" 
+as no data is required to be sent with the response. */
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(person => person.id !== id)
-    res.status(204).end()
+    Contact.findByIdAndRemove(req.params.id)
+        .then(result => {
+            reponse.status(204).end()
+        })
+        .catch(error => console.log(error))
 })
 
 /*Define the port for the backend. Either the one defined in enviromental
