@@ -9,7 +9,7 @@ const Contact = require('./models/contact')
 /*Creating a token to add the request body to the logged message,
 if the request is of type POST. */
 morgan.token('body', (req) => {
-    if (req.method === "POST") {
+    if (req.method === "POST" || req.method === "PUT") {
         return JSON.stringify(req.body)
     } else {
         return null
@@ -46,6 +46,26 @@ app.post('/api/persons', (req, res, next) => {
             res.json(savedPerson)
         })         
     }
+})
+
+/*Defining a put request url: "/api/persons/id" 
+for updating person data. Getting the required parameters from
+the request body. Updating the number of the person found with
+the received id to the MongoDB database and displaying the new data
+in the response. */
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Contact.findByIdAndUpdate(req.params.id, person, { new: true })
+        .then(updatedContact => {
+            res.json(updatedContact)
+        })
+        .catch(error => next(error))
 })
 
 
