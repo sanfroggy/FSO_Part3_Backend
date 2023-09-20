@@ -82,25 +82,28 @@ data of a single person. Also returning a 400 "Bad request" status code
 through error handling middleware if a person with the given id does 
 not exists. */
 app.get('/api/persons/:id', (req, res, next) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
-        res.json(person)
-    } else {
-        const error = new Error('Contacts with the given id do not exist.')
-        error.name = 'CastError'
-        next(error)
-    }
-
+    Contact.findById(req.params.id)
+        .then (contact => {
+            if (contact) {
+                res.json(contact)
+            } else {
+                res.status(404).end()
+            }
+        })
+        .catch(error => next(error))      
 })
 
 /*Creating and displaying a response containing the number of entries
-in the person array and the current date and time. */
+in the MongoDB database and the current date and time. */
 app.get('/info', (req, res) => {
     let timestring = res.get('Date')
-    res.send(`Phonebook contains info for ${persons.length} people. </br></br>
-${Date()}`)
+    let counter = 0
+
+    Contact.find({}).then(result => {
+        res.send(`Phonebook contains info for ${result.length} people. </br></br>
+    ${Date()}`)
+    })  
+    .catch(error => next(error))
 })
 
 /*Defining a delete request url: "api/persons/id" for deleting the data of a 
