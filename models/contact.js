@@ -70,7 +70,11 @@ mongoose.connect(url)
 
 //Define a schema to use as a model for a Contact object to be saved to MongoDB.
 const contactSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        minlength: [3, 'The name given must have a minumum of 3 characters.'],
+        required: [true, 'The name cannot have an empty value.']
+    },
     number: String,
 })
 

@@ -33,7 +33,7 @@ app.post('/api/persons', (req, res, next) => {
     /*Checking if the request body has data for the name and number
     and returning a status code of 400 "Bad request" through error handling
     middleware if data is missing. */
-    if (!body.name || !body.number) {
+    if (!body.number) {
         const error = new Error('Missing name or number.')
         error.name = 'RequiredPropertyError'
         next(error)
@@ -44,7 +44,8 @@ app.post('/api/persons', (req, res, next) => {
         })
         person.save().then(savedPerson => {
             res.json(savedPerson)
-        })         
+        })
+        .catch(error => next(error))         
     }
 })
 
@@ -127,6 +128,10 @@ app.use(unknownEndpoint)
 //Defining the use of Express error handler middleware.
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
+
+    if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message})
+    }
 
     if (error.name === 'MongooseError') {
         return response.status(500).send({ error: 'Unable to connect to database.' })
