@@ -83,9 +83,9 @@ as no data is required to be sent with the response. */
 app.delete('/api/persons/:id', (req, res) => {
     Contact.findByIdAndRemove(req.params.id)
         .then(result => {
-            reponse.status(204).end()
+            res.status(204).end()
         })
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
 
 /*Define the port for the backend. Either the one defined in enviromental
