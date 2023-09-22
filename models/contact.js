@@ -82,7 +82,7 @@ const contactSchema = new mongoose.Schema({
   },
   number: {
     type: String,
-    minlength: [8, 'The number given must have a minimum of 8 characters.'],
+    minlength: [8, 'Number given must have a minimum of 8 characters.'],
 
     /*Defining a validator function to check that the give input follows the
         correct pattern. */
