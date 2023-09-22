@@ -68,14 +68,31 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-//Define a schema to use as a model for a Contact object to be saved to MongoDB.
+/*Define a schema to use as a model for a Contact object to be saved to MongoDB
+and the appropriate validators. */
 const contactSchema = new mongoose.Schema({
     name: {
         type: String,
-        minlength: [3, 'The name given must have a minumum of 3 characters.'],
-        required: [true, 'The name cannot have an empty value.']
+        minlength: [3, 'The name given must have a minimum of 3 characters.'],
+        required: [true, 'Name cannot have an empty value.']
     },
-    number: String,
+    number: {
+        type: String,
+        minlength: [8, 'The number given must have a minimum of 8 characters.'],
+
+        /*Defining a validator function to check that the give input follows the
+        correct pattern. */
+        validate: {
+            validator: function (v) {
+                return /^\d{2,2}-\d{6}/.test(v) && /\-\d+$/.test(v) ||
+                    /^\d{3,3}-\d{5}/.test(v) && /\-\d+$/.test(v) 
+            },
+            message: 'Number must be of format dd-dddddd or ddd-ddddd. ' +  
+            'Last part can have more digits than in the given example.'
+        },
+        required: [true, 'Number cannot have an empty value.']
+
+    }
 })
 
 /*Define the properties of the objects that are returned by the toJSON method. 

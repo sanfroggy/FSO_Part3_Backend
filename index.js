@@ -30,23 +30,16 @@ database and displaying it's data in the response. */
 app.post('/api/persons', (req, res, next) => {
     const body = req.body
 
-    /*Checking if the request body has data for the name and number
-    and returning a status code of 400 "Bad request" through error handling
-    middleware if data is missing. */
-    if (!body.number) {
-        const error = new Error('Missing name or number.')
-        error.name = 'RequiredPropertyError'
-        next(error)
-    } else {
-        const person = new Contact({
-            name: body.name,
-            number: body.number
-        })
-        person.save().then(savedPerson => {
-            res.json(savedPerson)
-        })
-        .catch(error => next(error))         
-    }
+    /*Returning a status code of 400 "Bad request" with the use of validators
+    and through error handling middleware if data is missing or incorrect. */
+    const person = new Contact({
+        name: body.name,
+        number: body.number
+    })
+    person.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
+    .catch(error => next(error))         
 })
 
 /*Defining a put request url: "/api/persons/id" 
@@ -135,10 +128,6 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'MongooseError') {
         return response.status(500).send({ error: 'Unable to connect to database.' })
-    }
-
-    if (error.name === 'RequiredPropertyError') {
-        return response.status(400).send({ error: 'Missing name or number.' })
     }
 
     if (error.name === 'CastError') {
